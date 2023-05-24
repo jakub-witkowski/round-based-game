@@ -7,6 +7,9 @@ Time constraints didn't allow me to try the mediator. Only the player is include
 
 As it is, the program relies on fixed format of both the status.txt file and the player1.txt file. The status file is ordered as follows: gold (1 line), bases (2 lines), active units (i.e., non-training units). A sample status file is included. The player1.txt file is ordered as follows: training units (1 line), gold (1 line), bases (2 lines), followed by the remaining active units.
 
+Makefile is included. 
+Compilation command: gcc player.c load_status.c menu.c map.c display_map.c list.c train.c move.c attack.c save.c mining.c -lpthread -o player 
+
 As specified in the instructions for the assignment, the program is executed by: ./player mapa.txt status.txt rozkazy.txt [time_limit].
 
 The time limit is optional, but the default is set to 5 seconds. It no status.txt file is present, the program loads default values.
@@ -19,6 +22,8 @@ Repozytorium zawiera tylko plik gracza (na przygotowanie mediatora nie pozwolił
 
 W obecnej postaci program bazuje na stałym formacie plików status.txt oraz player1.txt. Plik statusu jest uporządkowany w następujący sposób: złoto (1 linia), stan baz (2 linie), aktywne jednostki (=nie w czasie treningu). Dołączony jest przykładowy plik status.txt. Organizacja pliku player1.txt: jednostki szkolące się (1 linia), złoto (1 linia), stan baz (2 linie), następnie - aktywne jednostki.
 
+Dołączono plik makefile.
+Komenda kompilacji: gcc player.c load_status.c menu.c map.c display_map.c list.c train.c move.c attack.c save.c mining.c -lpthread -o player
 Jak wskazano w instrukcji do zadania, program uruchamia następujące polecenie: ./player mapa.txt status.txt rozkazy.txt [limit_czasowy].
 
 Limit czasu jest argumentem opcjonalnym, wartość domyślna to 5 sekund. Jeśli nie ma pliku status.txt, program wczytuje domyślne dane startowe.
