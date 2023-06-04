@@ -50,6 +50,7 @@ void *timer(void *arg)
             time_left--;
             if (time_left == 0) {
                 save(&gold, &units_on_the_map_counter, active_units);
+				free(active_units);
 				exit(0);
 			}
         }
