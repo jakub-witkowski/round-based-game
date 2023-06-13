@@ -24,9 +24,6 @@ int time_left; // number of seconds the player program is allowed to run;
 
 pthread_t thread;
 
-//int stop;
-//pthread_mutex_t lock;
-
 int temp[MAP_SIZE_Y][MAP_SIZE_X+1]; //temporary array to hold char values read from the file
 int map_data[MAP_SIZE_Y][MAP_SIZE_X]; //target array to hold int values representing the map
 
@@ -38,17 +35,11 @@ int units_on_the_map_counter = 0; // holds the number of units currently present
 
 void *timer(void *arg)
 {
-    while (1) {
+    while (1)
+	{
         /* Check if time is up in one second intervals */
         sleep(1);
 
-//        pthread_mutex_lock(&lock);
-//        int tmp = stop;
-//        pthread_mutex_unlock(&lock);
-//        if (tmp)
-//            break;
-
-//        pthread_mutex_lock(&lock);
         /* Update timer */
         if (time_left > 0) {
             time_left--;
@@ -58,7 +49,6 @@ void *timer(void *arg)
 				exit(0);
 			}
         }
-//        pthread_mutex_unlock(&lock);
     }
 
     return NULL;
@@ -74,16 +64,9 @@ int main(int argc, char* argv[])
 		limit = atoi(argv[4]); // default = 5 seconds, as indicated in the instructions
 
 	/* establishing thread for time control over gameplay */
-
-//	int ret = pthread_mutex_init(&lock, NULL);
-//    if (ret)
-//        return 1;
-
     int ret = pthread_create(&thread, NULL, timer, NULL);
-    if (ret) {
-    //    pthread_mutex_destroy(&lock);
+    if (ret)
         return 1;
-    }
 
 	/* erase rozkazy.txt by opening it in write mode */
 	FILE *fptr = fopen(argv[3], "w");
@@ -96,11 +79,10 @@ int main(int argc, char* argv[])
 
 	menu(&gold, &units_on_the_map_counter); // display the user interface
 
-	while (1) {
-	//	pthread_mutex_lock(&lock);
+	while (1)
+	{
         time_left = limit;
-    //    pthread_mutex_unlock(&lock);
-
+    
 		printf("\n >>> ");
 
 		/* user interface backend */
@@ -157,15 +139,6 @@ int main(int argc, char* argv[])
 			break;
 		}
 	}
-
-	//pthread_mutex_lock(&lock);
-    /* End thread signal */
-    //stop = 1;
-    //pthread_mutex_unlock(&lock);
-
-    /* Waiting for the thread to terminate */
-
-    //pthread_mutex_destroy(&lock);
 
     return 0;
 }
