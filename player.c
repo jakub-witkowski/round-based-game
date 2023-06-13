@@ -21,8 +21,11 @@
 #include "mining.h"
 
 int time_left; // number of seconds the player program is allowed to run;
-int stop;
-pthread_mutex_t lock;
+
+pthread_t thread;
+
+//int stop;
+//pthread_mutex_t lock;
 
 int temp[MAP_SIZE_Y][MAP_SIZE_X+1]; //temporary array to hold char values read from the file
 int map_data[MAP_SIZE_Y][MAP_SIZE_X]; //target array to hold int values representing the map
@@ -39,22 +42,23 @@ void *timer(void *arg)
         /* Check if time is up in one second intervals */
         sleep(1);
 
-        pthread_mutex_lock(&lock);
-        int tmp = stop;
-        pthread_mutex_unlock(&lock);
-        if (tmp)
-            break;
+//        pthread_mutex_lock(&lock);
+//        int tmp = stop;
+//        pthread_mutex_unlock(&lock);
+//        if (tmp)
+//            break;
 
-        pthread_mutex_lock(&lock);
+//        pthread_mutex_lock(&lock);
         /* Update timer */
         if (time_left > 0) {
             time_left--;
             if (time_left == 0) {
                 save(&gold, &units_on_the_map_counter, active_units);
+			    pthread_join(thread, NULL);
 				exit(0);
 			}
         }
-        pthread_mutex_unlock(&lock);
+//        pthread_mutex_unlock(&lock);
     }
 
     return NULL;
@@ -71,14 +75,13 @@ int main(int argc, char* argv[])
 
 	/* establishing thread for time control over gameplay */
 
-	int ret = pthread_mutex_init(&lock, NULL);
-    if (ret)
-        return 1;
+//	int ret = pthread_mutex_init(&lock, NULL);
+//    if (ret)
+//        return 1;
 
-    pthread_t thread;
-    ret = pthread_create(&thread, NULL, timer, NULL);
+    int ret = pthread_create(&thread, NULL, timer, NULL);
     if (ret) {
-        pthread_mutex_destroy(&lock);
+    //    pthread_mutex_destroy(&lock);
         return 1;
     }
 
@@ -94,9 +97,9 @@ int main(int argc, char* argv[])
 	menu(&gold, &units_on_the_map_counter); // display the user interface
 
 	while (1) {
-		pthread_mutex_lock(&lock);
+	//	pthread_mutex_lock(&lock);
         time_left = limit;
-        pthread_mutex_unlock(&lock);
+    //    pthread_mutex_unlock(&lock);
 
 		printf("\n >>> ");
 
@@ -155,15 +158,14 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	pthread_mutex_lock(&lock);
+	//pthread_mutex_lock(&lock);
     /* End thread signal */
-    stop = 1;
-    pthread_mutex_unlock(&lock);
+    //stop = 1;
+    //pthread_mutex_unlock(&lock);
 
     /* Waiting for the thread to terminate */
-    pthread_join(thread, NULL);
 
-    pthread_mutex_destroy(&lock);
+    //pthread_mutex_destroy(&lock);
 
     return 0;
 }

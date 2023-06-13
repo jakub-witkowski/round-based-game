@@ -2,7 +2,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "menu.h"
 
 #define MAP_SIZE_X 32
 #define MAP_SIZE_Y 5
@@ -20,28 +19,33 @@ typedef struct {
     int training_time;
 } au;
 
-void attack(char fname[], au a[], int* u) {
+void attack(char fname[], au a[], int* u)
+{
     int allowed_movement; // unit's movement points
     int attacker_id_counter; // validates the id indicated by the user
     int target_id_counter; // validates the target id indicated by the user
     int attacker_id; // the requested attacking unit id
     int target_id; // the requested target unit id
-    //int target_x_coord; // target x coordinate
-    //int target_y_coord; // target y coordinate
     int target_coord_counter = 0; // used for validating whether target coordinates have been established
     int distance; // the distance between the attacker unit and the target unit
 
     /* Requesting user input: indicating the attacking unit */
     attacker_id_counter = 0;
-    if (*u < 2) {
+    if (*u < 2)
+    {
         printf("\nThere are no units capable of making an attack.\n");
         printf("Type MENU to go back to main menu.\n");
-    } else {
-        while (attacker_id_counter < 1) {
+    }
+    else
+    {
+        while (attacker_id_counter < 1)
+        {
+            fflush(stdin);
             printf("Select the unit for attacking the enemy (ID): ");
             if (scanf(" %d", &attacker_id) == 1 && (attacker_id >= 2 && attacker_id <= *u - 1))
                 attacker_id_counter++;
-            else {
+            else
+            {
                 printf("\n Unit ID needs to range from 2 to %d. \n", *u - 1);
                 continue;
             }
@@ -49,34 +53,38 @@ void attack(char fname[], au a[], int* u) {
     }
 
     /* Validating user input */
-    if (attacker_id_counter > 0) {
-
-        if ((a[attacker_id].training_time > 0) && (strcmp(a[attacker_id].affiliation, "P") == 0)) {
-        
+    if (attacker_id_counter > 0)
+    {
+        if ((a[attacker_id].training_time > 0) && (strcmp(a[attacker_id].affiliation, "P") == 0))
+        {
             printf("\nCannot select units undergoing training.\n");
             printf("Type MENU to go back to main menu.\n");
             target_id_counter = -1;
-        
-        } else if (a[attacker_id].attack_count == 0) {
-
+        }
+        else if (a[attacker_id].attack_count == 0)
+        {
             printf("\nAttack limit per round exceeded.\n");
             printf("\nType MENU to go back to main menu.\n");
             target_id_counter = -1;
-        
-        } else if (strcmp(a[attacker_id].affiliation, "E") == 0) {
-        
+        }
+        else if (strcmp(a[attacker_id].affiliation, "E") == 0)
+        {
             printf("\nCannot select enemy units.\n");
             printf("Type MENU to go back to main menu.\n");
             target_id_counter = -1;
-        
-        } else {
+        }
+        else
+        {
             /* Requesting user input: indicating the target unit */
             target_id_counter = 0;
-            while (target_id_counter < 1) {
+            while (target_id_counter < 1)
+            {
+                fflush(stdin);
                 printf("Which enemy unit do you intend to attack? (ID): ");
                 if (scanf(" %d", &target_id) == 1 && (target_id > 0 && target_id <= *u - 1))
                     target_id_counter++;
-                else {
+                else
+                {
                     printf("\n Unit ID needs to range from 1 to %d.\n", *u - 1);
                     continue;
                 }
@@ -84,12 +92,15 @@ void attack(char fname[], au a[], int* u) {
         }
     }    
 
-    if (target_id_counter > 0) {
-        if (strcmp(a[target_id].affiliation, "P") == 0) {
+    if (target_id_counter > 0)
+    {
+        if (strcmp(a[target_id].affiliation, "P") == 0)
+        {
             printf("\nCannot attack friendly units.\n");
             printf("Type MENU to go back to main menu.\n");
-        } else {
-            
+        }
+        else
+        {    
             /* validating if the enemy unit is within the attacking unit range */
             distance = abs(a[attacker_id].x_coord - a[target_id].x_coord) + abs(a[attacker_id].y_coord - a[target_id].y_coord);
     
@@ -98,10 +109,13 @@ void attack(char fname[], au a[], int* u) {
             else
                 allowed_movement = 2;
      
-            if ((distance > a[attacker_id].remaining_movement + 1) || (distance > allowed_movement)) {
+            if ((distance > a[attacker_id].remaining_movement + 1) || (distance > allowed_movement))
+            {
                 printf("\nTarget unit outside the attacking unit range.\n");
                 printf("\nType MENU to go back to main menu.\n");
-            } else if ((distance < allowed_movement) && (distance < a[attacker_id].remaining_movement)) {
+            }
+            else if ((distance < allowed_movement) && (distance < a[attacker_id].remaining_movement))
+            {
                 a[attacker_id].remaining_movement = allowed_movement - distance;
                 printf("\nOrdering unit %d to attack enemy unit %d.\n", attacker_id, target_id);
                 a[attacker_id].attack_count = 0;
@@ -109,11 +123,13 @@ void attack(char fname[], au a[], int* u) {
                 /* order successful, write to file */
                 FILE *fptr; 
                 fptr = fopen(fname, "a");
-                if (!fptr) {
-                printf("Cannot open rozkazy.txt");
+                if (!fptr)
+                {
+                    printf("Cannot open rozkazy.txt");
                 }
 
-                if (fprintf(fptr, "%d A %d\n", attacker_id, target_id) < 0) {
+                if (fprintf(fptr, "%d A %d\n", attacker_id, target_id) < 0)
+                {
                     fprintf(stderr, "\nUnable to write order to file.\n");
                 }
 

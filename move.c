@@ -42,9 +42,11 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
         /* Requesting user input: indicating the unit to be moved */
         while (id_counter < 1) {
             printf("Which unit do you intend to move? (ID): ");
+            fflush(stdin);
             if (scanf(" %d", &id) == 1 && (id >= 2 && id <= *u-1))
                 id_counter++;
-            else {
+            else
+            {
                 printf("\n Unit ID needs to range from 2 to %d. \n", *u-1);
                 continue;
             }
@@ -52,7 +54,8 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
     }
 
     coord_counter = 0; 
-    if (id_counter > 0) {
+    if (id_counter > 0)
+    {
         if (strcmp(a[id].affiliation, "E") == 0)
         {
             printf("\nCannot select enemy units.\n");
@@ -69,6 +72,7 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
             {    
             /* requesting target coordinates and validating input*/
             printf("Please specify the target X coordinate: ");
+            fflush(stdin);
                 if (scanf(" %d", &x) == 1 && (x >= 0 && x <= MAP_SIZE_X - 1))
                 {
                     coord_counter++;
@@ -80,6 +84,7 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
                     continue;
                 }
             printf("Please specify the target Y coordinate: ");
+            fflush(stdin);
                 if (scanf(" %d", &y) == 1 && (y >= 0 && y <= MAP_SIZE_Y - 1))
                 {
                     coord_counter++;
