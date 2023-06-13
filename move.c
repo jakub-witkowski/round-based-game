@@ -42,9 +42,11 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
         /* Requesting user input: indicating the unit to be moved */
         while (id_counter < 1) {
             printf("Which unit do you intend to move? (ID): ");
-            fflush(stdin);
             if (scanf(" %d", &id) == 1 && (id >= 2 && id <= *u-1))
+            {
+                fflush(stdin);
                 id_counter++;
+            }
             else
             {
                 printf("\n Unit ID needs to range from 2 to %d. \n", *u-1);
@@ -72,11 +74,10 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
             {    
             /* requesting target coordinates and validating input*/
             printf("Please specify the target X coordinate: ");
-            fflush(stdin);
                 if (scanf(" %d", &x) == 1 && (x >= 0 && x <= MAP_SIZE_X - 1))
                 {
-                    coord_counter++;
-                    //printf("\nCoord counter: %d\n", coord_counter);    
+                    fflush(stdin);
+                    coord_counter++;    
                 }
                 else
                 {
@@ -87,8 +88,8 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
             fflush(stdin);
                 if (scanf(" %d", &y) == 1 && (y >= 0 && y <= MAP_SIZE_Y - 1))
                 {
+                    fflush(stdin);
                     coord_counter++;
-                    //printf("\nCoord counter: %d\n", coord_counter);
                 }
                 else
                 {

@@ -40,10 +40,12 @@ void attack(char fname[], au a[], int* u)
     {
         while (attacker_id_counter < 1)
         {
-            fflush(stdin);
             printf("Select the unit for attacking the enemy (ID): ");
             if (scanf(" %d", &attacker_id) == 1 && (attacker_id >= 2 && attacker_id <= *u - 1))
+            {
+                fflush(stdin);
                 attacker_id_counter++;
+            }
             else
             {
                 printf("\n Unit ID needs to range from 2 to %d. \n", *u - 1);
@@ -79,10 +81,12 @@ void attack(char fname[], au a[], int* u)
             target_id_counter = 0;
             while (target_id_counter < 1)
             {
-                fflush(stdin);
                 printf("Which enemy unit do you intend to attack? (ID): ");
                 if (scanf(" %d", &target_id) == 1 && (target_id > 0 && target_id <= *u - 1))
+                {
+                    fflush(stdin);
                     target_id_counter++;
+                }
                 else
                 {
                     printf("\n Unit ID needs to range from 1 to %d.\n", *u - 1);
