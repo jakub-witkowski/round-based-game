@@ -7,6 +7,7 @@
 
 #define MAP_SIZE_X 32
 #define MAP_SIZE_Y 5
+#define MAX_NUMBER_OF_UNITS 500
 
 #include "load_status.h"
 #include "menu.h"
@@ -28,14 +29,14 @@ int map_data[MAP_SIZE_Y][MAP_SIZE_X]; //target array to hold int values represen
 
 long gold; // holds the amount of gold
 int unit_id; // holds the current unit id
-au * active_units; // holds information on player and enemy active units;
+au active_units[MAX_NUMBER_OF_UNITS]; // holds information on player and enemy active units;
 char type; // holds the type of the unit to be trained
 int units_on_the_map_counter = 0; // holds the number of units currently present on the map
 
 void *timer(void *arg)
 {
     while (1) {
-        /* Wait one second */
+        /* Check if time is up in one second intervals */
         sleep(1);
 
         pthread_mutex_lock(&lock);
@@ -50,7 +51,6 @@ void *timer(void *arg)
             time_left--;
             if (time_left == 0) {
                 save(&gold, &units_on_the_map_counter, active_units);
-				free(active_units);
 				exit(0);
 			}
         }
@@ -85,8 +85,6 @@ int main(int argc, char* argv[])
 	/* erase rozkazy.txt by opening it in write mode */
 	FILE *fptr = fopen(argv[3], "w");
 	fclose(fptr);
-
-	active_units = (au *) malloc(units_on_the_map_counter * sizeof(au)); // dynamic array holding unit data
 
 	/* reading status and map data from files, updating gold if workers are present at the mine */
 	load_status(argv[2], &units_on_the_map_counter, &gold, active_units); // read data from status.txt

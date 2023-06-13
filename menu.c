@@ -23,5 +23,6 @@ void menu(int* g, int* u)
     printf("- display list of units on the map (type LIST and hit Return)\n\n");
 
 	printf("- end your move (type SAVE and hit Return)\n");
+	printf("- display main menu (type MENU and hit Return)\n");
 	printf("\n");
 }
