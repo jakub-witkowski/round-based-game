@@ -22,9 +22,9 @@
 
 int time_left; // number of seconds the player program is allowed to run;
 
-pthread_t thread;
+pthread_t thread; // thread identifier used for time control over the player round;
 
-int temp[MAP_SIZE_Y][MAP_SIZE_X+1]; //temporary array to hold char values read from the file
+int temp[MAP_SIZE_Y][MAP_SIZE_X+1]; //temporary array to hold chars read from the file
 int map_data[MAP_SIZE_Y][MAP_SIZE_X]; //target array to hold int values representing the map
 
 long gold; // holds the amount of gold
@@ -41,9 +41,11 @@ void *timer(void *arg)
         sleep(1);
 
         /* Update timer */
-        if (time_left > 0) {
+        if (time_left > 0)
+		{
             time_left--;
-            if (time_left == 0) {
+            if (time_left == 0)
+			{
                 save(&gold, &units_on_the_map_counter, active_units);
 			    pthread_join(thread, NULL);
 				exit(0);
@@ -73,8 +75,8 @@ int main(int argc, char* argv[])
 	fclose(fptr);
 
 	/* reading status and map data from files, updating gold if workers are present at the mine */
-	load_status(argv[2], &units_on_the_map_counter, &gold, active_units); // read data from status.txt
 	map(argv[1], map_data, temp); // update map
+	load_status(argv[2], &units_on_the_map_counter, &gold, active_units); // read data from status.txt
 	gold += mining(map_data, active_units, &units_on_the_map_counter); // update gold
 
 	menu(&gold, &units_on_the_map_counter); // display the user interface
@@ -85,9 +87,10 @@ int main(int argc, char* argv[])
     
 		printf("\n >>> ");
 
-		/* user interface backend */
+		/* user interface logic */
 		char line[1024];
-		if (!fgets(line, sizeof(line), stdin)) {
+		if (!fgets(line, sizeof(line), stdin))
+		{
 			fprintf(stderr, "input error\n");
 			return 1;
 		}
@@ -96,31 +99,38 @@ int main(int argc, char* argv[])
 		if (sscanf(line, "%1023s", option) != 1)
 			continue;
 
-		if (strcmp(option, "K") == 0) {
+		if (strcmp(option, "K") == 0)
+		{
 			type = 'K';
         	train(argv[3], &gold, &type, active_units, &units_on_the_map_counter);
 		}	
-		if (strcmp(option, "S") == 0) {
+		if (strcmp(option, "S") == 0)
+		{
 			type = 'S';
         	train(argv[3], &gold, &type, active_units, &units_on_the_map_counter);
 		}	
-		if (strcmp(option, "A") == 0) {
+		if (strcmp(option, "A") == 0)
+		{
 			type = 'A';
         	train(argv[3], &gold, &type, active_units, &units_on_the_map_counter);
 		}	
-		if (strcmp(option, "P") == 0) {
+		if (strcmp(option, "P") == 0)
+		{
 			type = 'P';
         	train(argv[3], &gold, &type, active_units, &units_on_the_map_counter);
 		}
-		if (strcmp(option, "R") == 0) {
+		if (strcmp(option, "R") == 0)
+		{
 			type = 'R';
         	train(argv[3], &gold, &type, active_units, &units_on_the_map_counter);
 		}
-		if (strcmp(option, "C") == 0) {
+		if (strcmp(option, "C") == 0)
+		{
 			type = 'C';
         	train(argv[3], &gold, &type, active_units, &units_on_the_map_counter);
 		}	
-		if (strcmp(option, "W") == 0) {
+		if (strcmp(option, "W") == 0)
+		{
 			type = 'W';
         	train(argv[3], &gold, &type, active_units, &units_on_the_map_counter);
 		}
@@ -134,11 +144,13 @@ int main(int argc, char* argv[])
 			list(active_units, &units_on_the_map_counter);
         if (strcmp(option, "MENU") == 0)
             menu(&gold, &units_on_the_map_counter);
-		if (strcmp(option, "SAVE") == 0) {
+		if (strcmp(option, "SAVE") == 0)
+		{
 			save(&gold, &units_on_the_map_counter, active_units);
 			break;
 		}
 	}
 
+	pthread_join(thread, NULL);
     return 0;
 }

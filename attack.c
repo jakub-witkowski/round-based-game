@@ -147,11 +147,6 @@ void attack(char fname[], au a[], int* u)
     {    
         /* validating if the enemy unit is within the attacking unit range */
         distance = abs(a[attacker_id].x_coord - a[target_id].x_coord) + abs(a[attacker_id].y_coord - a[target_id].y_coord);
-        printf("Attacker X coord: %d\n", a[attacker_id].x_coord);
-        printf("Attacker Y coord: %d\n", a[attacker_id].y_coord);
-        printf("Target X coord: %d\n", a[target_id].x_coord);
-        printf("Target Y coord: %d\n", a[target_id].y_coord);
-        printf("Distance: %d\n", distance);
 
         if (strcmp(a[attacker_id].unit_type, "K") == 0)
             allowed_movement = 5;
