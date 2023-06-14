@@ -2,7 +2,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 #define MAP_SIZE_X 32
 #define MAP_SIZE_Y 5
@@ -23,16 +22,15 @@ typedef struct {
 void attack(char fname[], au a[], int* u)
 {
     int allowed_movement; // unit's movement points
-    int attacker_id_counter; // validates the id indicated by the user
-    int target_id_counter; // validates the target id indicated by the user
+    int attacker_id_counter = 0; // validates the id indicated by the user
+    int target_id_counter = 0; // validates the target id indicated by the user
     int attacker_id; // the requested attacking unit id
     int target_id; // the requested target unit id
     int target_coord_counter = 0; // used for validating whether target coordinates have been established
     int distance; // the distance between the attacker unit and the target unit
-    int input;
+    int input; // auxiliary variable making sure scanf() doesn't fall into an infinite loop;
 
     /* Requesting user input: indicating the attacking unit */
-    attacker_id_counter = 0;
     if (*u < 2)
     {
         printf("\nThere are no units capable of making an attack.\n");
@@ -40,7 +38,7 @@ void attack(char fname[], au a[], int* u)
     }
     else
     {
-        if (attacker_id_counter < 1)
+        if (attacker_id_counter == 0)
         {
             printf("Select the unit for attacking the enemy (ID): ");
             while ((input = scanf("%d", &attacker_id)) == 0)
@@ -50,7 +48,7 @@ void attack(char fname[], au a[], int* u)
             }
             if (input == EOF)
             {
-                printf("Nothing more to read - and no number found\n");
+                printf("Nothing to read and no number found\n");
             }
             else
             {
@@ -62,7 +60,19 @@ void attack(char fname[], au a[], int* u)
     /* Validating user input */
     if (attacker_id_counter > 0)
     {
-        if ((a[attacker_id].training_time > 0) && (strcmp(a[attacker_id].affiliation, "P") == 0))
+        if (attacker_id > *u - 1)
+        {
+            printf("\nWrong unit ID.\n");
+            printf("Type MENU to go back to main menu.\n");
+            target_id_counter = -1;
+        }
+        else if (attacker_id == 0)
+        {
+            printf("\nThe base cannot attack enemy units.\n");
+            printf("Type MENU to go back to main menu.\n");
+            target_id_counter = -1;
+        }
+        else if ((a[attacker_id].training_time > 0) && (strcmp(a[attacker_id].affiliation, "P") == 0))
         {
             printf("\nCannot select units undergoing training.\n");
             printf("Type MENU to go back to main menu.\n");
@@ -83,19 +93,21 @@ void attack(char fname[], au a[], int* u)
         else
         {
             /* Requesting user input: indicating the target unit */
-            target_id_counter = 0;
-            while (target_id_counter < 1)
+            if (target_id_counter == 0)
             {
                 printf("Which enemy unit do you intend to attack? (ID): ");
-                if (scanf(" %d", &target_id) == 1 && (target_id > 0 && target_id <= *u - 1))
+                while ((input = scanf("%d", &attacker_id)) == 0)
                 {
-                    fflush(stdin);
-                    target_id_counter++;
+                    scanf("%*[^\n]");
+                    printf("\n Unit ID needs to range from 2 to %d. Enter unit ID: \n", *u - 1);
+                }
+                if (input == EOF)
+                {
+                    printf("Nothing to read and no number found.\n");
                 }
                 else
                 {
-                    printf("\n Unit ID needs to range from 1 to %d.\n", *u - 1);
-                    continue;
+                    target_id_counter++;
                 }
             }
         }

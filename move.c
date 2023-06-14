@@ -22,116 +22,150 @@ typedef struct {
 void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
 {   
     int allowed_movement; // unit's movement points
-    int id_counter; // validates the id indicated by the user
-    int coord_counter; // monitors if two coordinates were given
-    int map_field_occupied = 0; //are there enemy units on the specified field?
+    int id_counter = 0; // validates the id indicated by the user
+    int coord_counter = 0; // monitors if two coordinates were given
+    //int map_field_occupied = 0; //are there enemy units on the specified field?
     int distance; // the distance the user attempts to move the unit
     int id; // the requested unit id
     int x; // target x coordinate
     int y; // target y coordinate
-    char* unit; // unit type retrieved from active_units    
+    char* unit; // unit type retrieved from active_units
+    int input; // auxiliary variable making sure scanf() doesn't fall into an infinite loop;
+    int stop = 0; // 0 = validation continues; 1 = stops the validation process;  
 
-    id_counter = 0;
-    if (*u <= 2)
+    if (*u < 2)
     {
         printf("\nThere are no units capable of moving.\n");
         printf("Type MENU to go back to main menu.\n");
     }
-    else
+    else if (*u >= 2)
     {
         /* Requesting user input: indicating the unit to be moved */
-        while (id_counter < 1) {
-            printf("Which unit do you intend to move? (ID): ");
-            if (scanf(" %d", &id) == 1 && (id >= 2 && id <= *u-1))
-            {
-                fflush(stdin);
-                id_counter++;
-            }
-            else
-            {
-                printf("\n Unit ID needs to range from 2 to %d. \n", *u-1);
-                continue;
-            }
+        printf("Which unit do you intend to move? (ID): ");
+        while ((input = scanf("%d", &id)) == 0)
+        {
+            scanf("%*[^\n]");
+            printf("\n Unit ID needs to range from 2 to %d. Enter unit ID: \n", *u - 1);
+        }
+        if (input == EOF)
+        {
+            printf("Nothing to read and no number found\n");
+        }
+        else
+        {
+            id_counter++;
         }
     }
 
-    coord_counter = 0; 
+    /* Validating user input: unit ID */
     if (id_counter > 0)
     {
-        if (strcmp(a[id].affiliation, "E") == 0)
+        if (id > *u - 1)
+        {
+            printf("\nWrong unit ID.\n");
+            printf("Type MENU to go back to main menu.\n");
+            id_counter = 0;
+        }
+        else if (id == 0)
+        {
+            printf("\nThe base cannot move.\n");
+            printf("Type MENU to go back to main menu.\n");
+            id_counter = 0;
+        }
+        else if (strcmp(a[id].affiliation, "E") == 0)
         {
             printf("\nCannot select enemy units.\n");
             printf("Type MENU to go back to main menu.\n");
+            id_counter = 0;
         }
         else if ((strcmp(a[id].affiliation, "P") == 0) && (a[id].training_time > 0))
         {
             printf("\nCannot move units undergoing training.\n");
             printf("Type MENU to go back to main menu.\n");
+            id_counter = 0;
+        }
+    }
+    
+    if (id_counter > 0)
+    {    
+        /* requesting target coordinates and validating input*/
+        printf("Please specify the target X coordinate: ");
+        while ((input = scanf("%d", &x)) == 0)
+        {
+            scanf("%*[^\n]");
+            printf("\nX coordinate needs to range from 0 to %d.\n", MAP_SIZE_X - 1);
+        }
+        if (input == EOF)
+        {
+            printf("Nothing to read and no number found\n");
         }
         else
         {
-            while (coord_counter < 2)
-            {    
-            /* requesting target coordinates and validating input*/
-            printf("Please specify the target X coordinate: ");
-                if (scanf(" %d", &x) == 1 && (x >= 0 && x <= MAP_SIZE_X - 1))
-                {
-                    fflush(stdin);
-                    coord_counter++;    
-                }
-                else
-                {
-                    printf("\nX coordinate needs to range from 0 to %d.\n", MAP_SIZE_X - 1);
-                    continue;
-                }
-            printf("Please specify the target Y coordinate: ");
-            fflush(stdin);
-                if (scanf(" %d", &y) == 1 && (y >= 0 && y <= MAP_SIZE_Y - 1))
-                {
-                    fflush(stdin);
-                    coord_counter++;
-                }
-                else
-                {
-                    printf("\nY coordinate needs to range from 0 to %d.\n", MAP_SIZE_Y - 1);
-                    continue;
-                }
-            }
-        }    
-    }
-
-    /* prevent the unit from going on obstacles */
-    if (coord_counter >= 2)
-    {
-        if (m[y][x] == 9)
+            coord_counter++;
+        }
+            
+        printf("Please specify the target Y coordinate: ");
+        while ((input = scanf("%d", &y)) == 0)
         {
+            scanf("%*[^\n]");
+            printf("\nY coordinate needs to range from 0 to %d.\n", MAP_SIZE_Y - 1);
+        }    
+        if (input == EOF)
+        {
+            printf("Nothing to read and no number found\n");
+        }
+        else
+        {
+            coord_counter++;
+        }
+    }
+     
+
+    /* Validating user input: target coordinates */
+    if (coord_counter == 2)
+    {
+        if (x < 0 || x > MAP_SIZE_X - 1)
+        {
+            /* Is X within range? */
+            printf("\nWrong X coordinate.\n");
+            printf("Type MENU to go back to main menu.\n");
+            stop = 1;
+        }
+        if ((stop == 0) && (y < 0 || y > MAP_SIZE_Y - 1))
+        {
+            /* Is Y within range? */
+            printf("\nWrong Y coordinate.\n");
+            printf("Type MENU to go back to main menu.\n");
+            stop = 1;
+        }
+        if ((stop == 0) && (m[y][x] == 9))
+        {
+            /* prevent the unit from going on obstacles */
             printf("\nThis field is a natural obstacle.\n");
             printf("Type MENU to go back to main menu.\n");
-            map_field_occupied = 1;
-        
+            stop = 1;
         }
-        else if (m[y][x] == 2)
+        if ((stop == 0) && (m[y][x] == 2))
         {
             /* prevent the unit from going on an enemy-occupied field  */
             printf("\nThis field is an enemy base.\n");
-            map_field_occupied = 1;
-        } else if (m[y][x] == 0)
+            printf("Type MENU to go back to main menu.\n");
+            stop = 1;
+        }
+        if ((stop == 0) && (m[y][x] == 0))
         {
             for (int i = 0; i < *u; i++)
 		        if ((strcmp(a[i].affiliation, "E") == 0) && (a[i].x_coord == x) && (a[i].y_coord == y))
                 {
-    	            map_field_occupied = 1;
+                    printf("\nThis is enemy-held territory.\n\n");
+                    printf("Type MENU to go back to main menu.\n");
+                    stop = 1;
                 }
-            if (map_field_occupied == 1)
-            {
-                printf("\nThis is enemy-held territory.\n\n");
-                printf("Type MENU to go back to main menu.\n");
-            }
         }
     }
 
     /* validating the distance a unit may travel*/
-    if ((map_field_occupied < 1) && (coord_counter != 0))
+    if ((stop == 0) && (coord_counter == 2))
     {
         distance = abs(a[id].x_coord - x) + abs(a[id].y_coord - y);
 
