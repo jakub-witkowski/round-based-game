@@ -62,31 +62,36 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
     {
         if (id > *u - 1)
         {
-            printf("\nWrong unit ID.\n");
+            printf("\n Unit ID needs to range from 2 to %d. \n", *u - 1);
             printf("Type MENU to go back to main menu.\n");
-            id_counter = 0;
+            stop = 1;
         }
-        else if (id == 0)
+        if ((stop == 0) && (id == 0))
         {
             printf("\nThe base cannot move.\n");
             printf("Type MENU to go back to main menu.\n");
-            id_counter = 0;
+            stop = 1;
         }
-        else if (strcmp(a[id].affiliation, "E") == 0)
+        if ((stop == 0) && (strcmp(a[id].affiliation, "E") == 0))
         {
             printf("\nCannot select enemy units.\n");
             printf("Type MENU to go back to main menu.\n");
-            id_counter = 0;
+            stop = 1;
         }
-        else if ((strcmp(a[id].affiliation, "P") == 0) && (a[id].training_time > 0))
+        if ((stop == 0) && ((strcmp(a[id].affiliation, "P") == 0) && (a[id].training_time > 0)))
         {
             printf("\nCannot move units undergoing training.\n");
             printf("Type MENU to go back to main menu.\n");
-            id_counter = 0;
+            stop = 1;
         }
     }
     
-    if (id_counter > 0)
+    if ((stop == 0) && (id_counter > 0))
+    {
+        printf("Selected unit: %d (%s), current position: X: %d, Y: %d \n", a[id].unit_id, a[id].unit_type, a[id].x_coord, a[id].y_coord);
+    }
+
+    if ((stop == 0) && (id_counter > 0))
     {    
         /* requesting target coordinates and validating input*/
         printf("Please specify the target X coordinate: ");
@@ -103,7 +108,23 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
         {
             coord_counter++;
         }
-            
+    }
+
+    if ((stop == 0) && (coord_counter == 1))
+    {
+        if (x < 0 || x > MAP_SIZE_X - 1)
+        {
+            /* Is X within range? */
+            printf("\nX coordinate needs to range from 0 to %d.\n", MAP_SIZE_X - 1);
+            printf("Type MENU to go back to main menu.\n");
+            stop = 1;
+        }
+        else
+            stop = 0;
+    }
+
+    if ((stop == 0) && (coord_counter == 1))
+    {        
         printf("Please specify the target Y coordinate: ");
         while ((input = scanf("%d", &y)) == 0)
         {
@@ -124,17 +145,10 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
     /* Validating user input: target coordinates */
     if (coord_counter == 2)
     {
-        if (x < 0 || x > MAP_SIZE_X - 1)
-        {
-            /* Is X within range? */
-            printf("\nWrong X coordinate.\n");
-            printf("Type MENU to go back to main menu.\n");
-            stop = 1;
-        }
         if ((stop == 0) && (y < 0 || y > MAP_SIZE_Y - 1))
         {
             /* Is Y within range? */
-            printf("\nWrong Y coordinate.\n");
+            printf("\nY coordinate needs to range from 0 to %d.\n", MAP_SIZE_Y - 1);
             printf("Type MENU to go back to main menu.\n");
             stop = 1;
         }
