@@ -38,8 +38,10 @@ int mining(int m[][MAP_SIZE_X], au a[], int* u)
 	if (workers_count > 0)
 		mine_coords = 0;
 		for (int i = 0; i < MAP_SIZE_Y; i++)
-			for (int j = 0; j < MAP_SIZE_X; j++) {
-				if (m[i][j] == 6) {
+			for (int j = 0; j < MAP_SIZE_X; j++)
+			{
+				if (m[i][j] == 6)
+				{
 					mine_y_coord = i;
 					mine_coords++;
 					mine_x_coord = j;

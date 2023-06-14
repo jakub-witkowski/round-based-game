@@ -16,20 +16,24 @@ typedef struct {
     int training_time;
 } au;
 
-void train(char fname[], long* g, char *t, au a[], int* u){
-int training_time;
-int unit_cost;
-int unit_stamina;
-char* phrase;
+void train(char fname[], long* g, char *t, au a[], int* u)
+{
+	int training_time;
+	int unit_cost;
+	int unit_stamina;
+	char* phrase;
 
 	/* is base busy training? */
-	if (strcmp(a[0].is_base_busy, "0") != 0) {
+	if (strcmp(a[0].is_base_busy, "0") != 0)
+	{
 		printf("Training in progress, cannot train new units");
 	}
 	
 	/* initiate training */
-	if (strcmp(a[0].is_base_busy, "0") == 0) {
-		switch (*t) {
+	if (strcmp(a[0].is_base_busy, "0") == 0)
+	{
+		switch (*t)
+		{
 			case 'K':
 				unit_cost = 400;
                 unit_stamina = 70;
@@ -73,10 +77,12 @@ char* phrase;
 				phrase = "training a worker";
 				break;
 		}
-		if (*g < unit_cost) {
+		if (*g < unit_cost)
+		{
 			printf("Insufficient gold for %s!", phrase);
-		} else if (*g >= unit_cost) {
-
+		}
+		else if (*g >= unit_cost)
+		{
 			/* training start successful */
 			strcpy(a[*u].affiliation, "P");
 			strcpy(a[*u].unit_type, t);
@@ -92,11 +98,13 @@ char* phrase;
 			/* save order to rozkazy.txt */
 			FILE *fptr; 
 			fptr = fopen(fname, "a");
-            if (!fptr) {
+            if (!fptr)
+			{
                 printf("Cannot open rozkazy.txt");
             }
 
-            if (fprintf(fptr, "0 B %c\n", *t) < 0) {
+            if (fprintf(fptr, "0 B %c\n", *t) < 0)
+			{
                 fprintf(stderr, "\nUnable to write order to file.\n");
             }
 

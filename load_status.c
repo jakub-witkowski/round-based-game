@@ -25,8 +25,8 @@ void load_status(char fname[], int* u, long* g, au a[])
 
     fptr = fopen(fname, "r");
     
-    if (fptr)
-    {
+    //if (fptr)
+    //{
         /* getting number of lines in status.txt*/
         int line_count = 0;
         char c;
@@ -34,8 +34,6 @@ void load_status(char fname[], int* u, long* g, au a[])
         for (c = getc(fptr); c != EOF; c = getc(fptr))
             if (c == '\n')
                 line_count++;
-
-        printf("Line count: %d\n", line_count);
 
         /* getting the number of units present on the map */
         *u = line_count - 1;
@@ -51,7 +49,6 @@ void load_status(char fname[], int* u, long* g, au a[])
             }
 
         *g = temp;
-        printf("Gold: %ld\n", *g);
 
         /* updating base info */
         for (int i = 2; i <= 3; i++)
@@ -62,9 +59,6 @@ void load_status(char fname[], int* u, long* g, au a[])
             }
         }
 
-        for (int i = 2; i <= 3; i++)
-            printf("%s %s %d %d %d %d %s\n", a[i-2].affiliation, a[i-2].unit_type, a[i-2].unit_id, a[i-2].x_coord, a[i-2].y_coord, a[i-2].current_stamina, a[i-2].is_base_busy);
-
         /* updating unit info */
         int i = 4;
         while (i <= line_count)
@@ -72,9 +66,6 @@ void load_status(char fname[], int* u, long* g, au a[])
             fscanf(fptr, "%s %s %d %d %d %d", a[i-2].affiliation, a[i-2].unit_type, &a[i-2].unit_id, &a[i-2].x_coord, &a[i-2].y_coord, &a[i-2].current_stamina);
             i++;
         }
-
-        for (int i = 2; i <= 3; i++)
-            printf("%s %s %d %d %d %d\n", a[i-2].affiliation, a[i-2].unit_type, a[i-2].unit_id, a[i-2].x_coord, a[i-2].y_coord, a[i-2].current_stamina);
 
         /* movement points counter set */
         for (int i = 0; i < *u; i++)
@@ -89,8 +80,6 @@ void load_status(char fname[], int* u, long* g, au a[])
                 a[i].remaining_movement = 2;
         }
 
-        printf("Movement points done!\n");
-
         /* attack counter set to 1 */
         for (int i = 0; i < *u; i++)
         {
@@ -102,13 +91,13 @@ void load_status(char fname[], int* u, long* g, au a[])
                 a[i].attack_count = 1;
         }
 
-        printf("Attack counter done!\n");
-    }
-    else
+    //}
+    
+    /*if (!fptr)
     {
         printf("\nCannot open %s, proceeding with default values.\n", fname);
 
-        /* default settings for game start */
+        /* default settings for game start 
 
         *g = 2000;
 
@@ -129,9 +118,7 @@ void load_status(char fname[], int* u, long* g, au a[])
         strcpy(a[1].is_base_busy, "0");
 
         *u = 2;
-
-        printf("Default values loaded\n");
-    }
+    } */
 
 fclose(fptr);
 }
