@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #define MAP_SIZE_X 32
 #define MAP_SIZE_Y 5
@@ -28,6 +29,7 @@ void attack(char fname[], au a[], int* u)
     int target_id; // the requested target unit id
     int target_coord_counter = 0; // used for validating whether target coordinates have been established
     int distance; // the distance between the attacker unit and the target unit
+    int input;
 
     /* Requesting user input: indicating the attacking unit */
     attacker_id_counter = 0;
@@ -38,18 +40,21 @@ void attack(char fname[], au a[], int* u)
     }
     else
     {
-        while (attacker_id_counter < 1)
+        if (attacker_id_counter < 1)
         {
             printf("Select the unit for attacking the enemy (ID): ");
-            if (scanf(" %d", &attacker_id) == 1 && (attacker_id >= 2 && attacker_id <= *u - 1))
+            while ((input = scanf("%d", &attacker_id)) == 0)
             {
-                fflush(stdin);
-                attacker_id_counter++;
+                scanf("%*[^\n]");
+                printf("\n Unit ID needs to range from 2 to %d. Enter unit ID: \n", *u - 1);
+            }
+            if (input == EOF)
+            {
+                printf("Nothing more to read - and no number found\n");
             }
             else
             {
-                printf("\n Unit ID needs to range from 2 to %d. \n", *u - 1);
-                continue;
+                attacker_id_counter++;
             }
         }
     }
