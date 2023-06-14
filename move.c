@@ -33,12 +33,12 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
     int input; // auxiliary variable making sure scanf() doesn't fall into an infinite loop;
     int stop = 0; // 0 = validation continues; 1 = stops the validation process;  
 
-    if (*u < 2)
+    if (*u <= 2)
     {
         printf("\nThere are no units capable of moving.\n");
         printf("Type MENU to go back to main menu.\n");
     }
-    else if (*u >= 2)
+    else if (*u > 2)
     {
         /* Requesting user input: indicating the unit to be moved */
         printf("Which unit do you intend to move? (ID): ");

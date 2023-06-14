@@ -25,35 +25,7 @@ void load_status(char fname[], int* u, long* g, au a[])
 
     fptr = fopen(fname, "r");
     
-    if (fptr == NULL)
-    {
-        printf("\nCannot open %s, proceeding with default values.\n", fname);
-
-        /* default settings for game start */
-
-        *g = 2000;
-
-        strcpy(a[0].affiliation, "P");
-	    strcpy(a[0].unit_type, "B");
-        a[0].unit_id = 0;
-        a[0].x_coord = 0;
-        a[0].y_coord = 0;
-        a[0].current_stamina = 200;
-        strcpy(a[0].is_base_busy, "0");
-
-        strcpy(a[1].affiliation, "E");
-	    strcpy(a[1].unit_type, "B");
-        a[1].unit_id = 1;
-        a[1].x_coord = MAP_SIZE_X-1;
-        a[1].y_coord = MAP_SIZE_Y-1;
-        a[1].current_stamina = 200;
-        strcpy(a[1].is_base_busy, "0");
-
-        *u = 2;
-
-        printf("Default values loaded\n");
-    }
-    else
+    if (fptr)
     {
         /* getting number of lines in status.txt*/
         int line_count = 0;
@@ -131,6 +103,34 @@ void load_status(char fname[], int* u, long* g, au a[])
         }
 
         printf("Attack counter done!\n");
+    }
+    else
+    {
+        printf("\nCannot open %s, proceeding with default values.\n", fname);
+
+        /* default settings for game start */
+
+        *g = 2000;
+
+        strcpy(a[0].affiliation, "P");
+	    strcpy(a[0].unit_type, "B");
+        a[0].unit_id = 0;
+        a[0].x_coord = 0;
+        a[0].y_coord = 0;
+        a[0].current_stamina = 200;
+        strcpy(a[0].is_base_busy, "0");
+
+        strcpy(a[1].affiliation, "E");
+	    strcpy(a[1].unit_type, "B");
+        a[1].unit_id = 1;
+        a[1].x_coord = MAP_SIZE_X-1;
+        a[1].y_coord = MAP_SIZE_Y-1;
+        a[1].current_stamina = 200;
+        strcpy(a[1].is_base_busy, "0");
+
+        *u = 2;
+
+        printf("Default values loaded\n");
     }
 
 fclose(fptr);

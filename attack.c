@@ -32,12 +32,12 @@ void attack(char fname[], au a[], int* u)
     int stop = 0; // 0 = validation continues; 1 = stops the validation process;  
 
     /* Requesting user input: indicating the attacking unit */
-    if (*u < 2)
+    if (*u <= 2)
     {
         printf("\nThere are no units capable of making an attack.\n");
         printf("Type MENU to go back to main menu.\n");
     }
-    else if (*u >= 2)
+    else if (*u > 2)
     {
         printf("Select the unit for attacking the enemy (ID): ");
         while ((input = scanf("%d", &attacker_id)) == 0)
