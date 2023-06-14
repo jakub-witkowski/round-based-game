@@ -23,7 +23,6 @@ int mining(int m[][MAP_SIZE_X], au a[], int* u)
 	int mine_x_coord;
 	int mine_y_coord;
 	int mine_coords;
-	int worker_id;
 	int workers_at_the_mine_count;
 	int mined_gold = 0;
 	const int gold_per_worker = 50;
