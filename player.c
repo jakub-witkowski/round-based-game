@@ -175,10 +175,10 @@ int main(int argc, char* argv[])
 		if (strcmp(option, "SAVE") == 0)
 		{
 			save(&gold, &units_on_the_map_counter, active_units);
-			pthread_join(thread, NULL);
 			exit(0);
 		}
 	}
 
+	pthread_join(thread, NULL);
     return 0;
 }
