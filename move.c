@@ -24,7 +24,6 @@ void move(char fname[], au a[], int* u, int m[][MAP_SIZE_X])
     int allowed_movement; // unit's movement points
     int id_counter = 0; // validates the id indicated by the user
     int coord_counter = 0; // monitors if two coordinates were given
-    //int map_field_occupied = 0; //are there enemy units on the specified field?
     int distance; // the distance the user attempts to move the unit
     int id; // the requested unit id
     int x; // target x coordinate
