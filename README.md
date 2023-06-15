@@ -12,7 +12,9 @@ Compilation command: gcc player.c load_status.c menu.c map.c display_map.c list.
 
 As specified in the instructions for the assignment, the program is executed by: ./player mapa.txt status.txt rozkazy.txt [time_limit].
 
-The time limit is optional, but the default is set to 5 seconds. It no status.txt file is present, the program loads default values.
+The time limit is optional, but the default is set to 5 seconds.
+
+The original submission was fully functional when tested on MacOS Monterey, but crashed on Ubuntu (double free or corruption (out)). This was caused by the dynamic array holding the unit data. In the present version, tested on both MacOS Monterey 12.6.6 and Ubuntu 22.04, the data are stored in an explicitly declared array. Given the maximum number of rounds allowed to a player (1000), a maximum number of units that is hypothetically achieveable is 501 (including the base) for each player - hence the constant MAX_NUMBER_OF_UNITS equal to 1002.
 
 ----
 
@@ -26,4 +28,6 @@ Dołączono plik makefile.
 Komenda kompilacji: gcc player.c load_status.c menu.c map.c display_map.c list.c train.c move.c attack.c save.c mining.c -lpthread -o player
 Jak wskazano w instrukcji do zadania, program uruchamia następujące polecenie: ./player mapa.txt status.txt rozkazy.txt [limit_czasowy].
 
-Limit czasu jest argumentem opcjonalnym, wartość domyślna to 5 sekund. Jeśli nie ma pliku status.txt, program wczytuje domyślne dane startowe.
+Limit czasu jest argumentem opcjonalnym, wartość domyślna to 5 sekund.
+
+Pierwotna wersja zadania działała bezproblemowo na MacOS Monterey, ale - jak się okazało - próba uruchomienia pod Ubuntu wywoływała błąd (double free or corruption (out)). Przyczyną okazała się dynamiczna tablica przechowująca dane jednostek. W obecnej wersji, przetestowanej na MacOS Monterey 12.6.6 oraz Ubuntu 22.04, dane jednostek przechowuje jawnie zadeklarowana tablica. Przy maksymalnej liczbie rund równej 1000 dla jednego gracza, maksymalna liczba jednostek, jaką gracz moze hipotetycznie osiągnąć to 501 (wliczając bazę) - stąd stała MAX_NUMBER_OF_UNITS równa 1002.
