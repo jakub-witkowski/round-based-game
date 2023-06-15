@@ -28,7 +28,7 @@ int temp[MAP_SIZE_Y][MAP_SIZE_X+1]; //temporary array to hold chars read from th
 int map_data[MAP_SIZE_Y][MAP_SIZE_X]; //target array to hold int values representing the map
 
 long gold = 0; // holds the amount of gold
-au active_units[MAX_NUMBER_OF_UNITS]; // holds information on player and enemy active units;
+au active_units[MAX_NUMBER_OF_UNITS] = { 0 }; // holds information on player and enemy active units;
 char type; // holds the type of the unit to be trained
 int units_on_the_map_counter = 0; // holds the number of units currently present on the map
 
@@ -175,10 +175,10 @@ int main(int argc, char* argv[])
 		if (strcmp(option, "SAVE") == 0)
 		{
 			save(&gold, &units_on_the_map_counter, active_units);
+			pthread_join(thread, NULL);
 			exit(0);
 		}
 	}
 
-	pthread_join(thread, NULL);
     return 0;
 }
